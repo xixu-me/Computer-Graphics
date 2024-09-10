@@ -4,28 +4,25 @@
 #pragma once
 
 #ifndef __AFXWIN_H__
-	#error "include 'pch.h' before including this file for PCH"
+#error "include 'pch.h' before including this file for PCH"
 #endif
 
-#include "resource.h"       // main symbols
-
+#include "resource.h" // main symbols
 
 // CTestApp:
 // See Test.cpp for the implementation of this class
 //
 
-class CTestApp : public CWinApp
-{
+class CTestApp : public CWinApp {
 public:
 	CTestApp() noexcept;
 
-
-// Overrides
+	// Overrides
 public:
 	virtual BOOL InitInstance();
 	virtual int ExitInstance();
 
-// Implementation
+	// Implementation
 	afx_msg void OnAppAbout();
 	DECLARE_MESSAGE_MAP()
 };

@@ -17,32 +17,27 @@
 #define new DEBUG_NEW
 #endif
 
-
 // CTestView
 
 IMPLEMENT_DYNCREATE(CTestView, CView)
 
 BEGIN_MESSAGE_MAP(CTestView, CView)
-	// Standard printing commands
-	ON_COMMAND(ID_FILE_PRINT, &CView::OnFilePrint)
-	ON_COMMAND(ID_FILE_PRINT_DIRECT, &CView::OnFilePrint)
-	ON_COMMAND(ID_FILE_PRINT_PREVIEW, &CView::OnFilePrintPreview)
+// Standard printing commands
+ON_COMMAND(ID_FILE_PRINT, &CView::OnFilePrint)
+ON_COMMAND(ID_FILE_PRINT_DIRECT, &CView::OnFilePrint)
+ON_COMMAND(ID_FILE_PRINT_PREVIEW, &CView::OnFilePrintPreview)
 END_MESSAGE_MAP()
 
 // CTestView construction/destruction
 
-CTestView::CTestView() noexcept
-{
+CTestView::CTestView() noexcept {
 	// TODO: add construction code here
-
 }
 
-CTestView::~CTestView()
-{
+CTestView::~CTestView() {
 }
 
-BOOL CTestView::PreCreateWindow(CREATESTRUCT& cs)
-{
+BOOL CTestView::PreCreateWindow(CREATESTRUCT &cs) {
 	// TODO: Modify the Window class or styles here by modifying
 	//  the CREATESTRUCT cs
 
@@ -51,9 +46,8 @@ BOOL CTestView::PreCreateWindow(CREATESTRUCT& cs)
 
 // CTestView drawing
 
-void CTestView::OnDraw(CDC* /*pDC*/)
-{
-	CTestDoc* pDoc = GetDocument();
+void CTestView::OnDraw(CDC * /*pDC*/) {
+	CTestDoc *pDoc = GetDocument();
 	ASSERT_VALID(pDoc);
 	if (!pDoc)
 		return;
@@ -61,45 +55,37 @@ void CTestView::OnDraw(CDC* /*pDC*/)
 	// TODO: add draw code for native data here
 }
 
-
 // CTestView printing
 
-BOOL CTestView::OnPreparePrinting(CPrintInfo* pInfo)
-{
+BOOL CTestView::OnPreparePrinting(CPrintInfo *pInfo) {
 	// default preparation
 	return DoPreparePrinting(pInfo);
 }
 
-void CTestView::OnBeginPrinting(CDC* /*pDC*/, CPrintInfo* /*pInfo*/)
-{
+void CTestView::OnBeginPrinting(CDC * /*pDC*/, CPrintInfo * /*pInfo*/) {
 	// TODO: add extra initialization before printing
 }
 
-void CTestView::OnEndPrinting(CDC* /*pDC*/, CPrintInfo* /*pInfo*/)
-{
+void CTestView::OnEndPrinting(CDC * /*pDC*/, CPrintInfo * /*pInfo*/) {
 	// TODO: add cleanup after printing
 }
-
 
 // CTestView diagnostics
 
 #ifdef _DEBUG
-void CTestView::AssertValid() const
-{
+void CTestView::AssertValid() const {
 	CView::AssertValid();
 }
 
-void CTestView::Dump(CDumpContext& dc) const
-{
+void CTestView::Dump(CDumpContext &dc) const {
 	CView::Dump(dc);
 }
 
-CTestDoc* CTestView::GetDocument() const // non-debug version is inline
+CTestDoc *CTestView::GetDocument() const // non-debug version is inline
 {
 	ASSERT(m_pDocument->IsKindOf(RUNTIME_CLASS(CTestDoc)));
-	return (CTestDoc*)m_pDocument;
+	return (CTestDoc *)m_pDocument;
 }
 #endif //_DEBUG
-
 
 // CTestView message handlers

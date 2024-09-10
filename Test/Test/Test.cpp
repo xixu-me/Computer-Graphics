@@ -16,23 +16,20 @@
 #define new DEBUG_NEW
 #endif
 
-
 // CTestApp
 
 BEGIN_MESSAGE_MAP(CTestApp, CWinApp)
-	ON_COMMAND(ID_APP_ABOUT, &CTestApp::OnAppAbout)
-	// Standard file based document commands
-	ON_COMMAND(ID_FILE_NEW, &CWinApp::OnFileNew)
-	ON_COMMAND(ID_FILE_OPEN, &CWinApp::OnFileOpen)
-	// Standard print setup command
-	ON_COMMAND(ID_FILE_PRINT_SETUP, &CWinApp::OnFilePrintSetup)
+ON_COMMAND(ID_APP_ABOUT, &CTestApp::OnAppAbout)
+// Standard file based document commands
+ON_COMMAND(ID_FILE_NEW, &CWinApp::OnFileNew)
+ON_COMMAND(ID_FILE_OPEN, &CWinApp::OnFileOpen)
+// Standard print setup command
+ON_COMMAND(ID_FILE_PRINT_SETUP, &CWinApp::OnFilePrintSetup)
 END_MESSAGE_MAP()
-
 
 // CTestApp construction
 
-CTestApp::CTestApp() noexcept
-{
+CTestApp::CTestApp() noexcept {
 
 	// support Restart Manager
 	m_dwRestartManagerSupportFlags = AFX_RESTART_MANAGER_SUPPORT_ALL_ASPECTS;
@@ -55,11 +52,9 @@ CTestApp::CTestApp() noexcept
 
 CTestApp theApp;
 
-
 // CTestApp initialization
 
-BOOL CTestApp::InitInstance()
-{
+BOOL CTestApp::InitInstance() {
 	// InitCommonControlsEx() is required on Windows XP if an application
 	// manifest specifies use of ComCtl32.dll version 6 or later to enable
 	// visual styles.  Otherwise, any window creation will fail.
@@ -72,10 +67,8 @@ BOOL CTestApp::InitInstance()
 
 	CWinApp::InitInstance();
 
-
 	// Initialize OLE libraries
-	if (!AfxOleInit())
-	{
+	if (!AfxOleInit()) {
 		AfxMessageBox(IDP_OLE_INIT_FAILED);
 		return FALSE;
 	}
@@ -95,27 +88,23 @@ BOOL CTestApp::InitInstance()
 	// TODO: You should modify this string to be something appropriate
 	// such as the name of your company or organization
 	SetRegistryKey(_T("Local AppWizard-Generated Applications"));
-	LoadStdProfileSettings(4);  // Load standard INI file options (including MRU)
-
+	LoadStdProfileSettings(4); // Load standard INI file options (including MRU)
 
 	// Register the application's document templates.  Document templates
 	//  serve as the connection between documents, frame windows and views
-	CSingleDocTemplate* pDocTemplate;
+	CSingleDocTemplate *pDocTemplate;
 	pDocTemplate = new CSingleDocTemplate(
 		IDR_MAINFRAME,
 		RUNTIME_CLASS(CTestDoc),
-		RUNTIME_CLASS(CMainFrame),       // main SDI frame window
+		RUNTIME_CLASS(CMainFrame), // main SDI frame window
 		RUNTIME_CLASS(CTestView));
 	if (!pDocTemplate)
 		return FALSE;
 	AddDocTemplate(pDocTemplate);
 
-
 	// Parse command line for standard shell commands, DDE, file open
 	CCommandLineInfo cmdInfo;
 	ParseCommandLine(cmdInfo);
-
-
 
 	// Dispatch commands specified on the command line.  Will return FALSE if
 	// app was launched with /RegServer, /Register, /Unregserver or /Unregister.
@@ -128,9 +117,8 @@ BOOL CTestApp::InitInstance()
 	return TRUE;
 }
 
-int CTestApp::ExitInstance()
-{
-	//TODO: handle additional resources you may have added
+int CTestApp::ExitInstance() {
+	// TODO: handle additional resources you may have added
 	AfxOleTerm(FALSE);
 
 	return CWinApp::ExitInstance();
@@ -138,11 +126,9 @@ int CTestApp::ExitInstance()
 
 // CTestApp message handlers
 
-
 // CAboutDlg dialog used for App About
 
-class CAboutDlg : public CDialogEx
-{
+class CAboutDlg : public CDialogEx {
 public:
 	CAboutDlg() noexcept;
 
@@ -152,19 +138,17 @@ public:
 #endif
 
 protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+	virtual void DoDataExchange(CDataExchange *pDX); // DDX/DDV support
 
-// Implementation
+	// Implementation
 protected:
 	DECLARE_MESSAGE_MAP()
 };
 
-CAboutDlg::CAboutDlg() noexcept : CDialogEx(IDD_ABOUTBOX)
-{
+CAboutDlg::CAboutDlg() noexcept : CDialogEx(IDD_ABOUTBOX) {
 }
 
-void CAboutDlg::DoDataExchange(CDataExchange* pDX)
-{
+void CAboutDlg::DoDataExchange(CDataExchange *pDX) {
 	CDialogEx::DoDataExchange(pDX);
 }
 
@@ -172,13 +156,9 @@ BEGIN_MESSAGE_MAP(CAboutDlg, CDialogEx)
 END_MESSAGE_MAP()
 
 // App command to run the dialog
-void CTestApp::OnAppAbout()
-{
+void CTestApp::OnAppAbout() {
 	CAboutDlg aboutDlg;
 	aboutDlg.DoModal();
 }
 
 // CTestApp message handlers
-
-
-
