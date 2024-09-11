@@ -60,7 +60,7 @@ void CWindmillView::OnDraw(CDC *pDC) {
 
 	// TODO: add draw code for native data here
 	// 设置定时器
-	SetTimer(1, 20, NULL);
+	SetTimer(1, 40, NULL);
 
 	// 获取客户端区域并设置坐标系
 	CRect rect;
