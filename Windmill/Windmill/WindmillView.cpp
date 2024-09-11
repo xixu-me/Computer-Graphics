@@ -76,7 +76,7 @@ void CWindmillView::OnDraw(CDC *pDC) {
 
 	// 定义风车叶片和底座的参数
 	float fAngle = m_nAngle * PI / 180;
-	int R = 300, r = 50, h = 10;
+	int R = 300, r = 75, h = 10;
 	int baseWidthTop = 100;
 	int baseWidthBottom = 300;
 	int baseHeight = 400;
