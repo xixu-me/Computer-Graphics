@@ -58,92 +58,115 @@ void CWindmillView::OnDraw(CDC *pDC) {
 	if (!pDoc)
 		return;
 
-	// TODO: add draw code for native data here
 	// 设置定时器
-	SetTimer(1, 40, NULL);
+	SetTimer(1, 1, NULL);
 
-	// 获取客户端区域并设置坐标系
+	// 获取客户端矩形区域
 	CRect rect;
 	GetClientRect(&rect);
-	pDC->SetMapMode(MM_ANISOTROPIC);
-	pDC->SetWindowExt(rect.Width(), rect.Height());
-	pDC->SetViewportExt(rect.Width(), -rect.Height());
-	pDC->SetViewportOrg(rect.Width() / 2, rect.Height() / 2);
 
-	// 定义画笔和画刷
+	// 创建兼容的内存设备上下文
+	CDC memDC;
+	memDC.CreateCompatibleDC(pDC);
+
+	// 创建兼容的位图并选择到内存设备上下文中
+	CBitmap NewBitmap, *pOldBitmap;
+	NewBitmap.CreateCompatibleBitmap(pDC, rect.Width(), rect.Height());
+	pOldBitmap = memDC.SelectObject(&NewBitmap);
+
+	// 设置映射模式和视口
+	memDC.SetMapMode(MM_ANISOTROPIC);
+	memDC.SetWindowExt(rect.Width(), rect.Height());
+	memDC.SetViewportExt(rect.Width(), -rect.Height());
+	memDC.SetViewportOrg(rect.Width() / 2, rect.Height() / 2);
+	rect.OffsetRect(-rect.Width() / 2, -rect.Height() / 2);
+
+	// 画风车底座
 	CPen NewPen, *pOldPen;
 	CBrush NewBrush, *pOldBrush;
+	NewPen.CreatePen(PS_SOLID, 1, RGB(109, 104, 106));
+	pOldPen = memDC.SelectObject(&NewPen);
+	NewBrush.CreateSolidBrush(RGB(109, 104, 106));
+	pOldBrush = memDC.SelectObject(&NewBrush);
 
-	// 定义风车叶片和底座的参数
-	float fAngle = m_nAngle * PI / 180;
-	int R = 300, r = 75, h = 10;
 	int baseWidthTop = 100;
 	int baseWidthBottom = 300;
 	int baseHeight = 400;
 	int bias = 65;
 	POINT pt[4]{
-		{ -baseWidthTop / 2, h + bias },
-		{ baseWidthTop / 2, h + bias },
-		{ baseWidthBottom / 2, h + bias - baseHeight },
-		{ -baseWidthBottom / 2, h + bias - baseHeight }
+		{ -baseWidthTop / 2, -bias },
+		{ baseWidthTop / 2, -bias },
+		{ baseWidthBottom / 2, -bias + baseHeight },
+		{ -baseWidthBottom / 2, -bias + baseHeight }
 	};
+	memDC.Polygon(pt, 4);
 
-	// 绘制风车底座
-	NewPen.CreatePen(PS_SOLID, 1, RGB(109, 104, 106));
-	pOldPen = pDC->SelectObject(&NewPen);
-	NewBrush.CreateSolidBrush(RGB(109, 104, 106));
-	pOldBrush = pDC->SelectObject(&NewBrush);
-	pDC->Polygon(pt, 4);
-	pDC->SelectObject(pOldBrush);
+	memDC.SelectObject(pOldBrush);
 	NewBrush.DeleteObject();
-	pDC->SelectObject(pOldPen);
+	memDC.SelectObject(pOldPen);
 	NewPen.DeleteObject();
 
-	// 绘制风车叶片（蓝色部分）
-	NewPen.CreatePen(PS_SOLID, 500, RGB(0, 82, 217));
-	pOldPen = pDC->SelectObject(&NewPen);
+	// 画风车叶片
+	float fAngle = m_nAngle * PI / 180;
+	int R = 300, r = 75, h = 10;
+
+	// 画第一组叶片
+	NewPen.CreatePen(PS_SOLID, 1, RGB(0, 82, 217));
+	pOldPen = memDC.SelectObject(&NewPen);
 	NewBrush.CreateSolidBrush(RGB(0, 82, 217));
-	pOldBrush = pDC->SelectObject(&NewBrush);
-	pDC->BeginPath();
-	pDC->MoveTo(0, h);
-	pDC->LineTo(R * cos(fAngle), R * sin(fAngle) + h);
-	pDC->LineTo(R * cos(fAngle) + r * sin(fAngle), R * sin(fAngle) + h - r * cos(fAngle));
-	pDC->LineTo(r * sqrt(2) * cos(fAngle - PI / 4), r * sqrt(2) * sin(fAngle - PI / 4) + h);
-	pDC->LineTo(r * cos(fAngle), r * sin(fAngle) + h);
-	pDC->MoveTo(0, h);
-	pDC->LineTo(R * cos(fAngle + PI), R * sin(fAngle + PI) + h);
-	pDC->LineTo(R * cos(fAngle + PI) + r * sin(fAngle + PI), R * sin(fAngle + PI) + h - r * cos(fAngle + PI));
-	pDC->LineTo(r * sqrt(2) * cos(fAngle + PI - PI / 4), r * sqrt(2) * sin(fAngle + PI - PI / 4) + h);
-	pDC->LineTo(r * cos(fAngle + PI), r * sin(fAngle + PI) + h);
-	pDC->EndPath();
-	pDC->FillPath();
-	pDC->SelectObject(pOldBrush);
+	pOldBrush = memDC.SelectObject(&NewBrush);
+
+	memDC.BeginPath();
+	memDC.MoveTo(0, h);
+	memDC.LineTo(R * cos(fAngle), R * sin(fAngle) + h);
+	memDC.LineTo(R * cos(fAngle) + r * sin(fAngle), R * sin(fAngle) + h - r * cos(fAngle));
+	memDC.LineTo(r * sqrt(2) * cos(fAngle - PI / 4), r * sqrt(2) * sin(fAngle - PI / 4) + h);
+	memDC.LineTo(0, h);
+	memDC.MoveTo(0, h);
+	memDC.LineTo(R * cos(fAngle + PI), R * sin(fAngle + PI) + h);
+	memDC.LineTo(R * cos(fAngle + PI) + r * sin(fAngle + PI), R * sin(fAngle + PI) + h - r * cos(fAngle + PI));
+	memDC.LineTo(r * sqrt(2) * cos(fAngle + PI - PI / 4), r * sqrt(2) * sin(fAngle + PI - PI / 4) + h);
+	memDC.LineTo(0, h);
+	memDC.EndPath();
+	memDC.FillPath();
+
+	memDC.SelectObject(pOldBrush);
 	NewBrush.DeleteObject();
-	pDC->SelectObject(pOldPen);
+	memDC.SelectObject(pOldPen);
 	NewPen.DeleteObject();
 
-	// 绘制风车叶片（黄色部分）
-	NewPen.CreatePen(PS_SOLID, 500, RGB(236, 189, 101));
-	pOldPen = pDC->SelectObject(&NewPen);
+	// 画第二组叶片
+	NewPen.CreatePen(PS_SOLID, 1, RGB(236, 189, 101));
+	pOldPen = memDC.SelectObject(&NewPen);
 	NewBrush.CreateSolidBrush(RGB(236, 189, 101));
-	pOldBrush = pDC->SelectObject(&NewBrush);
-	pDC->BeginPath();
-	pDC->MoveTo(0, h);
-	pDC->LineTo(R * cos(fAngle + PI / 2), R * sin(fAngle + PI / 2) + h);
-	pDC->LineTo(R * cos(fAngle + PI / 2) + r * sin(fAngle + PI / 2), R * sin(fAngle + PI / 2) + h - r * cos(fAngle + PI / 2));
-	pDC->LineTo(r * sqrt(2) * cos(fAngle + PI / 2 - PI / 4), r * sqrt(2) * sin(fAngle + PI / 2 - PI / 4) + h);
-	pDC->LineTo(r * cos(fAngle + PI / 2), r * sin(fAngle + PI / 2) + h);
-	pDC->MoveTo(0, h);
-	pDC->LineTo(R * cos(fAngle - PI / 2), R * sin(fAngle - PI / 2) + h);
-	pDC->LineTo(R * cos(fAngle - PI / 2) + r * sin(fAngle - PI / 2), R * sin(fAngle - PI / 2) + h - r * cos(fAngle - PI / 2));
-	pDC->LineTo(r * sqrt(2) * cos(fAngle - PI / 2 - PI / 4), r * sqrt(2) * sin(fAngle - PI / 2 - PI / 4) + h);
-	pDC->LineTo(r * cos(fAngle - PI / 2), r * sin(fAngle - PI / 2) + h);
-	pDC->EndPath();
-	pDC->FillPath();
-	pDC->SelectObject(pOldBrush);
+	pOldBrush = memDC.SelectObject(&NewBrush);
+
+	memDC.BeginPath();
+	memDC.MoveTo(0, h);
+	memDC.LineTo(R * cos(fAngle + PI / 2), R * sin(fAngle + PI / 2) + h);
+	memDC.LineTo(R * cos(fAngle + PI / 2) + r * sin(fAngle + PI / 2), R * sin(fAngle + PI / 2) + h - r * cos(fAngle + PI / 2));
+	memDC.LineTo(r * sqrt(2) * cos(fAngle + PI / 2 - PI / 4), r * sqrt(2) * sin(fAngle + PI / 2 - PI / 4) + h);
+	memDC.LineTo(0, h);
+	memDC.MoveTo(0, h);
+	memDC.LineTo(R * cos(fAngle - PI / 2), R * sin(fAngle - PI / 2) + h);
+	memDC.LineTo(R * cos(fAngle - PI / 2) + r * sin(fAngle - PI / 2), R * sin(fAngle - PI / 2) + h - r * cos(fAngle - PI / 2));
+	memDC.LineTo(r * sqrt(2) * cos(fAngle - PI / 2 - PI / 4), r * sqrt(2) * sin(fAngle - PI / 2 - PI / 4) + h);
+	memDC.LineTo(0, h);
+	memDC.EndPath();
+	memDC.FillPath();
+
+	memDC.SelectObject(pOldBrush);
 	NewBrush.DeleteObject();
-	pDC->SelectObject(pOldPen);
+	memDC.SelectObject(pOldPen);
 	NewPen.DeleteObject();
+
+	// 将内存设备上下文中的内容复制到屏幕设备上下文中
+	pDC->BitBlt(0, 0, rect.Width(), rect.Height(), &memDC, -rect.Width() / 2, -rect.Height() / 2, SRCCOPY);
+
+	// 清理资源
+	memDC.SelectObject(pOldBitmap);
+	NewBitmap.DeleteObject();
+	memDC.DeleteDC();
 }
 
 // CWindmillView printing
@@ -182,11 +205,15 @@ CWindmillDoc *CWindmillView::GetDocument() const // non-debug version is inline
 // CWindmillView message handlers
 
 void CWindmillView::OnTimer(UINT_PTR nIDEvent) {
-	// TODO: Add your message handler code here and/or call default
-	m_nAngle += 5;
+	// 增加角度
+	m_nAngle += 1;
+
+	// 如果角度超过360度，重置为0
 	if (m_nAngle >= 360)
 		m_nAngle = 0;
-	Invalidate();
+
+	// 使视图无效以触发重绘，但不擦除背景
+	Invalidate(FALSE);
 
 	CView::OnTimer(nIDEvent);
 }
