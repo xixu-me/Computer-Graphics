@@ -79,7 +79,6 @@ void CWindmillView::OnDraw(CDC *pDC) {
 	memDC.SetWindowExt(rect.Width(), rect.Height());
 	memDC.SetViewportExt(rect.Width(), -rect.Height());
 	memDC.SetViewportOrg(rect.Width() / 2, rect.Height() / 2);
-	rect.OffsetRect(-rect.Width() / 2, -rect.Height() / 2);
 
 	// 画风车底座
 	CPen NewPen, *pOldPen;
