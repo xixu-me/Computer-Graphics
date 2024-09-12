@@ -159,8 +159,6 @@ void CWindmillView::OnDraw(CDC *pDC) {
 	memDC.SelectObject(pOldPen);
 	NewPen.DeleteObject();
 
-	GetClientRect(&rect);
-
 	// 设置屏幕设备上下文的映射模式和视口
 	pDC->SetMapMode(MM_ANISOTROPIC);
 	pDC->SetWindowExt(rect.Width(), rect.Height());
