@@ -94,13 +94,13 @@ void CStraightLineView::OnDraw(CDC *pDC) {
 	// 调用Bresenham算法绘制直线
 	BresenhamLine(&memDC);
 
-	// 再次获取客户端矩形区域并设置设备上下文的映射模式和视口
+	// 设置显示设备上下文的映射模式和视口
 	pDC->SetMapMode(MM_ANISOTROPIC);
 	pDC->SetWindowExt(m_rect.Width(), m_rect.Height());
 	pDC->SetViewportExt(m_rect.Width(), -m_rect.Height());
 	pDC->SetViewportOrg(m_rect.Width() / 2, m_rect.Height() / 2);
 
-	// 将内存设备上下文中的位图拷贝到设备上下文中
+	// 将内存设备上下文中的位图拷贝到显示设备上下文中
 	pDC->BitBlt(-m_rect.Width() / 2, -m_rect.Height() / 2, m_rect.Width(), m_rect.Height(), &memDC, -m_rect.Width() / 2, -m_rect.Height() / 2, SRCCOPY);
 
 	// 恢复旧位图并删除对象
