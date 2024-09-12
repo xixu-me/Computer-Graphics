@@ -74,7 +74,7 @@ void CWindmillView::OnDraw(CDC *pDC) {
 	NewBitmap.CreateCompatibleBitmap(pDC, rect.Width(), rect.Height());
 	pOldBitmap = memDC.SelectObject(&NewBitmap);
 
-	// 设置映射模式和视口
+	// 设置内存设备上下文的映射模式和视口
 	memDC.SetMapMode(MM_ANISOTROPIC);
 	memDC.SetWindowExt(rect.Width(), rect.Height());
 	memDC.SetViewportExt(rect.Width(), -rect.Height());
@@ -93,10 +93,10 @@ void CWindmillView::OnDraw(CDC *pDC) {
 	int baseHeight = 400;
 	int bias = 65;
 	POINT pt[4]{
-		{ -baseWidthTop / 2, -bias },
-		{ baseWidthTop / 2, -bias },
-		{ baseWidthBottom / 2, -bias + baseHeight },
-		{ -baseWidthBottom / 2, -bias + baseHeight }
+		{ -baseWidthTop / 2, bias },
+		{ baseWidthTop / 2, bias },
+		{ baseWidthBottom / 2, bias - baseHeight },
+		{ -baseWidthBottom / 2, bias - baseHeight }
 	};
 	memDC.Polygon(pt, 4);
 
@@ -159,8 +159,16 @@ void CWindmillView::OnDraw(CDC *pDC) {
 	memDC.SelectObject(pOldPen);
 	NewPen.DeleteObject();
 
+	GetClientRect(&rect);
+
+	// 设置屏幕设备上下文的映射模式和视口
+	pDC->SetMapMode(MM_ANISOTROPIC);
+	pDC->SetWindowExt(rect.Width(), rect.Height());
+	pDC->SetViewportExt(rect.Width(), -rect.Height());
+	pDC->SetViewportOrg(rect.Width() / 2, rect.Height() / 2);
+
 	// 将内存设备上下文中的内容复制到屏幕设备上下文中
-	pDC->BitBlt(0, 0, rect.Width(), rect.Height(), &memDC, -rect.Width() / 2, -rect.Height() / 2, SRCCOPY);
+	pDC->BitBlt(-rect.Width() / 2, -rect.Height() / 2, rect.Width(), rect.Height(), &memDC, -rect.Width() / 2, -rect.Height() / 2, SRCCOPY);
 
 	// 清理资源
 	memDC.SelectObject(pOldBitmap);
