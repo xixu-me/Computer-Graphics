@@ -159,13 +159,13 @@ void CWindmillView::OnDraw(CDC *pDC) {
 	memDC.SelectObject(pOldPen);
 	NewPen.DeleteObject();
 
-	// 设置屏幕设备上下文的映射模式和视口
+	// 设置显示设备上下文的映射模式和视口
 	pDC->SetMapMode(MM_ANISOTROPIC);
 	pDC->SetWindowExt(rect.Width(), rect.Height());
 	pDC->SetViewportExt(rect.Width(), -rect.Height());
 	pDC->SetViewportOrg(rect.Width() / 2, rect.Height() / 2);
 
-	// 将内存设备上下文中的内容复制到屏幕设备上下文中
+	// 将内存设备上下文中的内容复制到显示设备上下文中
 	pDC->BitBlt(-rect.Width() / 2, -rect.Height() / 2, rect.Width(), rect.Height(), &memDC, -rect.Width() / 2, -rect.Height() / 2, SRCCOPY);
 
 	// 清理资源
