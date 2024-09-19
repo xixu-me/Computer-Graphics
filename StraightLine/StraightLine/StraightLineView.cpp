@@ -190,7 +190,6 @@ void CStraightLineView::BresenhamLine(CDC *pDC) {
 				ptEnd = ptTemp;
 			}
 			// d = 0.5 - k;
-			e = 0;
 			for (ptTemp = ptOrigin, e = k; ptTemp.x < ptEnd.x; ptTemp.x++) {
 				// DOUBLE factor = (DOUBLE)(ptTemp.x - ptOrigin.x) / totalSteps;
 				// COLORREF color = interpolateColor(startColor, endColor, factor);
