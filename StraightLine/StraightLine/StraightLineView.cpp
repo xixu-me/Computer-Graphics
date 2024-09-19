@@ -156,7 +156,7 @@ void CStraightLineView::BresenhamLine(CDC *pDC) {
 	int totalSteps = max(abs(dx), abs(dy));
 
 	// 定义颜色插值函数
-	auto interpolateColor = [](COLORREF start, COLORREF end, double factor) -> COLORREF {
+	auto interpolateColor = [](COLORREF start, COLORREF end, DOUBLE factor) -> COLORREF {
 		BYTE r = static_cast<BYTE>(GetRValue(start) + factor * (GetRValue(end) - GetRValue(start)));
 		BYTE g = static_cast<BYTE>(GetGValue(start) + factor * (GetGValue(end) - GetGValue(start)));
 		BYTE b = static_cast<BYTE>(GetBValue(start) + factor * (GetBValue(end) - GetBValue(start)));
@@ -171,7 +171,7 @@ void CStraightLineView::BresenhamLine(CDC *pDC) {
 			ptEnd = ptTemp;
 		}
 		for (int y = ptOrigin.y; y <= ptEnd.y; y++) {
-			double factor = (double)(y - ptOrigin.y) / totalSteps;
+			DOUBLE factor = (DOUBLE)(y - ptOrigin.y) / totalSteps;
 			COLORREF color = interpolateColor(startColor, endColor, factor);
 			pDC->SetPixelV(ptOrigin.x, y, color);
 		}
@@ -190,7 +190,7 @@ void CStraightLineView::BresenhamLine(CDC *pDC) {
 				ptEnd = ptTemp;
 			}
 			for (ptTemp = ptOrigin; ptTemp.x <= ptEnd.x; ptTemp.x++) {
-				double factor = (double)(ptTemp.x - ptOrigin.x) / totalSteps;
+				DOUBLE factor = (DOUBLE)(ptTemp.x - ptOrigin.x) / totalSteps;
 				COLORREF color = interpolateColor(startColor, endColor, factor);
 				pDC->SetPixelV(ptTemp.x, ptTemp.y, color);
 				if (d < 0) {
@@ -211,7 +211,7 @@ void CStraightLineView::BresenhamLine(CDC *pDC) {
 				ptEnd = ptTemp;
 			}
 			for (ptTemp = ptOrigin; ptTemp.y <= ptEnd.y; ptTemp.y++) {
-				double factor = (double)(ptTemp.y - ptOrigin.y) / totalSteps;
+				DOUBLE factor = (DOUBLE)(ptTemp.y - ptOrigin.y) / totalSteps;
 				COLORREF color = interpolateColor(startColor, endColor, factor);
 				pDC->SetPixelV(ptTemp.x, ptTemp.y, color);
 				if (d < 0) {
@@ -232,7 +232,7 @@ void CStraightLineView::BresenhamLine(CDC *pDC) {
 				ptEnd = ptTemp;
 			}
 			for (ptTemp = ptOrigin; ptTemp.x <= ptEnd.x; ptTemp.x++) {
-				double factor = (double)(ptTemp.x - ptOrigin.x) / totalSteps;
+				DOUBLE factor = (DOUBLE)(ptTemp.x - ptOrigin.x) / totalSteps;
 				COLORREF color = interpolateColor(startColor, endColor, factor);
 				pDC->SetPixelV(ptTemp.x, ptTemp.y, color);
 				if (d < 0) {
@@ -253,7 +253,7 @@ void CStraightLineView::BresenhamLine(CDC *pDC) {
 				ptEnd = ptTemp;
 			}
 			for (ptTemp = ptOrigin; ptTemp.y >= ptEnd.y; ptTemp.y--) {
-				double factor = (double)(ptOrigin.y - ptTemp.y) / totalSteps;
+				DOUBLE factor = (DOUBLE)(ptOrigin.y - ptTemp.y) / totalSteps;
 				COLORREF color = interpolateColor(startColor, endColor, factor);
 				pDC->SetPixelV(ptTemp.x, ptTemp.y, color);
 				if (d < 0) {
@@ -269,9 +269,9 @@ void CStraightLineView::BresenhamLine(CDC *pDC) {
 }
 
 void CStraightLineView::WuLine(CDC *pDC) {
-	// 定义起始颜色和结束颜色
 	COLORREF startColor = RGB(0, 82, 217);
 	COLORREF endColor = RGB(236, 189, 101);
+	COLORREF backColor = RGB(255, 255, 255);
 
 	// 获取起点和终点坐标
 	CPoint ptOrigin = m_ptOrigin, ptEnd = m_ptEnd, ptTemp;
@@ -279,12 +279,28 @@ void CStraightLineView::WuLine(CDC *pDC) {
 	int totalSteps = max(abs(dx), abs(dy));
 
 	// 定义颜色插值函数
-	// auto interpolateColor = [](COLORREF start, COLORREF end, DOUBLE factor) -> COLORREF {
-	// 	BYTE r = static_cast<BYTE>(GetRValue(start) + factor * (GetRValue(end) - GetRValue(start)));
-	// 	BYTE g = static_cast<BYTE>(GetGValue(start) + factor * (GetGValue(end) - GetGValue(start)));
-	// 	BYTE b = static_cast<BYTE>(GetBValue(start) + factor * (GetBValue(end) - GetBValue(start)));
-	// 	return RGB(r, g, b);
-	// };
+	auto interpolateColor = [](COLORREF start, COLORREF end, DOUBLE factor) -> COLORREF {
+		BYTE r = static_cast<BYTE>(GetRValue(start) + factor * (GetRValue(end) - GetRValue(start)));
+		BYTE g = static_cast<BYTE>(GetGValue(start) + factor * (GetGValue(end) - GetGValue(start)));
+		BYTE b = static_cast<BYTE>(GetBValue(start) + factor * (GetBValue(end) - GetBValue(start)));
+		return RGB(r, g, b);
+	};
+
+	// 上方像素颜色
+	auto downPixelColor = [&](COLORREF foreColor, DOUBLE e) -> COLORREF {
+		BYTE r = static_cast<BYTE>((GetRValue(backColor) - GetRValue(foreColor)) * e + GetRValue(foreColor));
+		BYTE g = static_cast<BYTE>((GetGValue(backColor) - GetGValue(foreColor)) * e + GetGValue(foreColor));
+		BYTE b = static_cast<BYTE>((GetBValue(backColor) - GetBValue(foreColor)) * e + GetBValue(foreColor));
+		return RGB(r, g, b);
+	};
+
+	// 下方像素颜色
+	auto upPixelColor = [&](COLORREF foreColor, DOUBLE e) -> COLORREF {
+		BYTE r = static_cast<BYTE>((GetRValue(backColor) - GetRValue(foreColor)) * (1 - e) + GetRValue(foreColor));
+		BYTE g = static_cast<BYTE>((GetGValue(backColor) - GetGValue(foreColor)) * (1 - e) + GetGValue(foreColor));
+		BYTE b = static_cast<BYTE>((GetBValue(backColor) - GetBValue(foreColor)) * (1 - e) + GetBValue(foreColor));
+		return RGB(r, g, b);
+	};
 
 	// 处理垂直线的情况
 	if (ptOrigin.x == ptEnd.x) {
@@ -294,7 +310,9 @@ void CStraightLineView::WuLine(CDC *pDC) {
 			ptEnd = ptTemp;
 		}
 		for (int y = ptOrigin.y; y < ptEnd.y; y++) {
-			pDC->SetPixelV(ptOrigin.x, y, RGB(0, 0, 0));
+			DOUBLE factor = (DOUBLE)(y - ptOrigin.y) / totalSteps;
+			COLORREF foreColor = interpolateColor(startColor, endColor, factor);
+			pDC->SetPixelV(ptOrigin.x, y, foreColor);
 		}
 	}
 	else {
@@ -311,8 +329,10 @@ void CStraightLineView::WuLine(CDC *pDC) {
 				ptEnd = ptTemp;
 			}
 			for (ptTemp = ptOrigin, e = k; ptTemp.x < ptEnd.x; ptTemp.x++) {
-				pDC->SetPixelV(ptTemp.x, ptTemp.y, RGB(e * 255, e * 255, e * 255));
-				pDC->SetPixelV(ptTemp.x, ptTemp.y + 1, RGB((1.0 - e) * 255, (1.0 - e) * 255, (1.0 - e) * 255));
+				DOUBLE factor = (DOUBLE)(ptTemp.x - ptOrigin.x) / totalSteps;
+				COLORREF foreColor = interpolateColor(startColor, endColor, factor);
+				pDC->SetPixelV(ptTemp.x, ptTemp.y, downPixelColor(foreColor, e));
+				pDC->SetPixelV(ptTemp.x, ptTemp.y + 1, upPixelColor(foreColor, e));
 				e += k;
 				if (e >= 1.0) {
 					ptTemp.y++;
@@ -329,8 +349,10 @@ void CStraightLineView::WuLine(CDC *pDC) {
 			}
 			// d = 0.5 - 1 / k;
 			for (ptTemp = ptOrigin, e = 1 / k; ptTemp.y < ptEnd.y; ptTemp.y++) {
-				pDC->SetPixelV(ptTemp.x, ptTemp.y, RGB(e * 255, e * 255, e * 255));
-				pDC->SetPixelV(ptTemp.x + 1, ptTemp.y, RGB((1.0 - e) * 255, (1.0 - e) * 255, (1.0 - e) * 255));
+				DOUBLE factor = (DOUBLE)(ptTemp.y - ptOrigin.y) / totalSteps;
+				COLORREF foreColor = interpolateColor(startColor, endColor, factor);
+				pDC->SetPixelV(ptTemp.x, ptTemp.y, downPixelColor(foreColor, e));
+				pDC->SetPixelV(ptTemp.x + 1, ptTemp.y, upPixelColor(foreColor, e));
 				e += 1 / k;
 				if (e >= 1.0) {
 					ptTemp.x++;
@@ -346,8 +368,10 @@ void CStraightLineView::WuLine(CDC *pDC) {
 				ptEnd = ptTemp;
 			}
 			for (ptTemp = ptOrigin, e = -k; ptTemp.x < ptEnd.x; ptTemp.x++) {
-				pDC->SetPixelV(ptTemp.x, ptTemp.y, RGB(e * 255, e * 255, e * 255));
-				pDC->SetPixelV(ptTemp.x, ptTemp.y - 1, RGB((1 - e) * 255, (1 - e) * 255, (1 - e) * 255));
+				DOUBLE factor = (DOUBLE)(ptTemp.x - ptOrigin.x) / totalSteps;
+				COLORREF foreColor = interpolateColor(startColor, endColor, factor);
+				pDC->SetPixelV(ptTemp.x, ptTemp.y, downPixelColor(foreColor, e));
+				pDC->SetPixelV(ptTemp.x, ptTemp.y - 1, upPixelColor(foreColor, e));
 				e -= k;
 				if (e >= 1.0) {
 					ptTemp.y--;
@@ -363,8 +387,10 @@ void CStraightLineView::WuLine(CDC *pDC) {
 				ptEnd = ptTemp;
 			}
 			for (ptTemp = ptOrigin, e = -1 / k; ptTemp.y > ptEnd.y; ptTemp.y--) {
-				pDC->SetPixelV(ptTemp.x, ptTemp.y, RGB(e * 255, e * 255, e * 255));
-				pDC->SetPixelV(ptTemp.x + 1, ptTemp.y, RGB((1 - e) * 255, (1 - e) * 255, (1 - e) * 255));
+				DOUBLE factor = (DOUBLE)(ptOrigin.y - ptTemp.y) / totalSteps;
+				COLORREF foreColor = interpolateColor(startColor, endColor, factor);
+				pDC->SetPixelV(ptTemp.x, ptTemp.y, downPixelColor(foreColor, e));
+				pDC->SetPixelV(ptTemp.x + 1, ptTemp.y, upPixelColor(foreColor, e));
 				e -= 1 / k;
 				if (e >= 1.0) {
 					ptTemp.x++;
