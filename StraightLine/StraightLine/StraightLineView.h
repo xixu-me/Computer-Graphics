@@ -39,6 +39,7 @@ protected:
 	DECLARE_MESSAGE_MAP()
 private:
 	void BresenhamLine(CDC *pDC);
+	void WuLine(CDC *pDC);
 	CRect m_rect;
 	CPoint m_ptOrigin, m_ptEnd;
 	BOOL m_bDraw;
