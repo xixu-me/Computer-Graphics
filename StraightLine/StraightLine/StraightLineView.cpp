@@ -169,98 +169,128 @@ void CStraightLineView::BresenhamLine(CDC *pDC) {
 			ptOrigin = ptEnd;
 			ptEnd = ptTemp;
 		}
-		for (int y = ptOrigin.y; y <= ptEnd.y; y++) {
-			DOUBLE factor = (DOUBLE)(y - ptOrigin.y) / totalSteps;
-			COLORREF color = interpolateColor(startColor, endColor, factor);
-			pDC->SetPixelV(ptOrigin.x, y, color);
+		for (int y = ptOrigin.y; y < ptEnd.y; y++) {
+			// DOUBLE factor = (DOUBLE)(y - ptOrigin.y) / totalSteps;
+			// COLORREF color = interpolateColor(startColor, endColor, factor);
+			// pDC->SetPixelV(ptOrigin.x, y, color);
+			pDC->SetPixelV(ptOrigin.x, y, RGB(0, 0, 0));
 		}
 	}
 	else {
 		// 计算斜率
 		DOUBLE k = (DOUBLE)dy / dx;
-		DOUBLE d;
+		// DOUBLE d;
+		DOUBLE e;
 
 		// 处理斜率在[0, 1]之间的情况
-		if (k >= 0 && k <= 1) {
-			d = 0.5 - k;
+		if (k >= 0.0 && k <= 1.0) {
 			if (ptOrigin.x > ptEnd.x) {
 				ptTemp = ptOrigin;
 				ptOrigin = ptEnd;
 				ptEnd = ptTemp;
 			}
-			for (ptTemp = ptOrigin; ptTemp.x <= ptEnd.x; ptTemp.x++) {
-				DOUBLE factor = (DOUBLE)(ptTemp.x - ptOrigin.x) / totalSteps;
-				COLORREF color = interpolateColor(startColor, endColor, factor);
-				pDC->SetPixelV(ptTemp.x, ptTemp.y, color);
-				if (d < 0) {
-					d += 1 - k;
+			// d = 0.5 - k;
+			e = 0;
+			for (ptTemp = ptOrigin, e = k; ptTemp.x < ptEnd.x; ptTemp.x++) {
+				// DOUBLE factor = (DOUBLE)(ptTemp.x - ptOrigin.x) / totalSteps;
+				// COLORREF color = interpolateColor(startColor, endColor, factor);
+				pDC->SetPixelV(ptTemp.x, ptTemp.y, RGB(e * 255, e * 255, e * 255));
+				pDC->SetPixelV(ptTemp.x, ptTemp.y + 1, RGB((1.0 - e) * 255, (1.0 - e) * 255, (1.0 - e) * 255));
+				e += k;
+				// if (d < 0) {
+				// 	d += 1 - k;
+				// 	ptTemp.y++;
+				// }
+				// else {
+				// 	d -= k;
+				// }
+				if (e >= 1.0) {
 					ptTemp.y++;
-				}
-				else {
-					d -= k;
+					e--;
 				}
 			}
 		}
-		// 处理斜率大于1的情况
-		else if (k > 1) {
-			d = 0.5 - 1 / k;
+		// 处理斜率在(1, ∞)之间的情况
+		else if (k > 1.0) {
 			if (ptOrigin.y > ptEnd.y) {
 				ptTemp = ptOrigin;
 				ptOrigin = ptEnd;
 				ptEnd = ptTemp;
 			}
-			for (ptTemp = ptOrigin; ptTemp.y <= ptEnd.y; ptTemp.y++) {
-				DOUBLE factor = (DOUBLE)(ptTemp.y - ptOrigin.y) / totalSteps;
-				COLORREF color = interpolateColor(startColor, endColor, factor);
-				pDC->SetPixelV(ptTemp.x, ptTemp.y, color);
-				if (d < 0) {
-					d += 1 - 1 / k;
+			// d = 0.5 - 1 / k;
+			for (ptTemp = ptOrigin, e = 1 / k; ptTemp.y < ptEnd.y; ptTemp.y++) {
+				// DOUBLE factor = (DOUBLE)(ptOrigin.y - ptTemp.y) / totalSteps;
+				// COLORREF color = interpolateColor(startColor, endColor, factor);
+				// pDC->SetPixelV(ptTemp.x, ptTemp.y, color);
+				pDC->SetPixelV(ptTemp.x, ptTemp.y, RGB(e * 255, e * 255, e * 255));
+				pDC->SetPixelV(ptTemp.x + 1, ptTemp.y, RGB((1.0 - e) * 255, (1.0 - e) * 255, (1.0 - e) * 255));
+				e += 1 / k;
+				// if (d < 0) {
+				// 	d += 1 - 1 / k;
+				// 	ptTemp.x++;
+				// }
+				// else {
+				// 	d -= 1 / k;
+				// }
+				if (e >= 1.0) {
 					ptTemp.x++;
-				}
-				else {
-					d -= 1 / k;
+					e--;
 				}
 			}
 		}
-		// 处理斜率在[-1, 0]之间的情况
-		else if (k < 0 && k >= -1) {
-			d = 0.5 + k;
+		// 处理斜率在[-1, 0)之间的情况
+		else if (k < 0.0 && k >= -1.0) {
 			if (ptOrigin.x > ptEnd.x) {
 				ptTemp = ptOrigin;
 				ptOrigin = ptEnd;
 				ptEnd = ptTemp;
 			}
-			for (ptTemp = ptOrigin; ptTemp.x <= ptEnd.x; ptTemp.x++) {
-				DOUBLE factor = (DOUBLE)(ptTemp.x - ptOrigin.x) / totalSteps;
-				COLORREF color = interpolateColor(startColor, endColor, factor);
-				pDC->SetPixelV(ptTemp.x, ptTemp.y, color);
-				if (d < 0) {
-					d += 1 + k;
+			// d = 0.5 + k;
+			for (ptTemp = ptOrigin, e = -k; ptTemp.x < ptEnd.x; ptTemp.x++) {
+				// DOUBLE factor = (DOUBLE)(ptTemp.x - ptOrigin.x) / totalSteps;
+				// COLORREF color = interpolateColor(startColor, endColor, factor);
+				// pDC->SetPixelV(ptTemp.x, ptTemp.y, color);
+				pDC->SetPixelV(ptTemp.x, ptTemp.y, RGB(e * 255, e * 255, e * 255));
+				pDC->SetPixelV(ptTemp.x, ptTemp.y - 1, RGB((1 - e) * 255, (1 - e) * 255, (1 - e) * 255));
+				e -= k;
+				// if (d < 0) {
+				// 	d += 1 + k;
+				// 	ptTemp.y--;
+				// }
+				// else {
+				// 	d += k;
+				// }
+				if (e >= 1.0) {
 					ptTemp.y--;
-				}
-				else {
-					d += k;
+					e--;
 				}
 			}
 		}
-		// 处理斜率小于-1的情况
+		// 处理斜率在(-∞, -1)之间的情况
 		else {
-			d = 0.5 + 1 / k;
 			if (ptOrigin.y < ptEnd.y) {
 				ptTemp = ptOrigin;
 				ptOrigin = ptEnd;
 				ptEnd = ptTemp;
 			}
-			for (ptTemp = ptOrigin; ptTemp.y >= ptEnd.y; ptTemp.y--) {
-				DOUBLE factor = (DOUBLE)(ptOrigin.y - ptTemp.y) / totalSteps;
-				COLORREF color = interpolateColor(startColor, endColor, factor);
-				pDC->SetPixelV(ptTemp.x, ptTemp.y, color);
-				if (d < 0) {
-					d += 1 + 1 / k;
+			// d = 0.5 + 1 / k;
+			for (ptTemp = ptOrigin, e = -1 / k; ptTemp.y > ptEnd.y; ptTemp.y--) {
+				// DOUBLE factor = (DOUBLE)(ptOrigin.y - ptTemp.y) / totalSteps;
+				// COLORREF color = interpolateColor(startColor, endColor, factor);
+				// pDC->SetPixelV(ptTemp.x, ptTemp.y, color);
+				pDC->SetPixelV(ptTemp.x, ptTemp.y, RGB(e * 255, e * 255, e * 255));
+				pDC->SetPixelV(ptTemp.x + 1, ptTemp.y, RGB((1 - e) * 255, (1 - e) * 255, (1 - e) * 255));
+				e -= 1 / k;
+				// if (d < 0) {
+				// 	d += 1 + 1 / k;
+				// 	ptTemp.x++;
+				// }
+				// else {
+				// 	d += 1 / k;
+				// }
+				if (e >= 1.0) {
 					ptTemp.x++;
-				}
-				else {
-					d += 1 / k;
+					e--;
 				}
 			}
 		}
