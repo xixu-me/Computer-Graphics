@@ -155,7 +155,7 @@ void CStraightLineView::BresenhamLine(CDC *pDC) {
 	int totalSteps = max(abs(dx), abs(dy));
 
 	// 定义颜色插值函数
-	auto interpolateColor = [](COLORREF start, COLORREF end, double factor) -> COLORREF {
+	auto interpolateColor = [](COLORREF start, COLORREF end, DOUBLE factor) -> COLORREF {
 		BYTE r = static_cast<BYTE>(GetRValue(start) + factor * (GetRValue(end) - GetRValue(start)));
 		BYTE g = static_cast<BYTE>(GetGValue(start) + factor * (GetGValue(end) - GetGValue(start)));
 		BYTE b = static_cast<BYTE>(GetBValue(start) + factor * (GetBValue(end) - GetBValue(start)));
@@ -170,7 +170,7 @@ void CStraightLineView::BresenhamLine(CDC *pDC) {
 			ptEnd = ptTemp;
 		}
 		for (int y = ptOrigin.y; y <= ptEnd.y; y++) {
-			double factor = (double)(y - ptOrigin.y) / totalSteps;
+			DOUBLE factor = (DOUBLE)(y - ptOrigin.y) / totalSteps;
 			COLORREF color = interpolateColor(startColor, endColor, factor);
 			pDC->SetPixelV(ptOrigin.x, y, color);
 		}
@@ -189,7 +189,7 @@ void CStraightLineView::BresenhamLine(CDC *pDC) {
 				ptEnd = ptTemp;
 			}
 			for (ptTemp = ptOrigin; ptTemp.x <= ptEnd.x; ptTemp.x++) {
-				double factor = (double)(ptTemp.x - ptOrigin.x) / totalSteps;
+				DOUBLE factor = (DOUBLE)(ptTemp.x - ptOrigin.x) / totalSteps;
 				COLORREF color = interpolateColor(startColor, endColor, factor);
 				pDC->SetPixelV(ptTemp.x, ptTemp.y, color);
 				if (d < 0) {
@@ -210,7 +210,7 @@ void CStraightLineView::BresenhamLine(CDC *pDC) {
 				ptEnd = ptTemp;
 			}
 			for (ptTemp = ptOrigin; ptTemp.y <= ptEnd.y; ptTemp.y++) {
-				double factor = (double)(ptTemp.y - ptOrigin.y) / totalSteps;
+				DOUBLE factor = (DOUBLE)(ptTemp.y - ptOrigin.y) / totalSteps;
 				COLORREF color = interpolateColor(startColor, endColor, factor);
 				pDC->SetPixelV(ptTemp.x, ptTemp.y, color);
 				if (d < 0) {
@@ -231,7 +231,7 @@ void CStraightLineView::BresenhamLine(CDC *pDC) {
 				ptEnd = ptTemp;
 			}
 			for (ptTemp = ptOrigin; ptTemp.x <= ptEnd.x; ptTemp.x++) {
-				double factor = (double)(ptTemp.x - ptOrigin.x) / totalSteps;
+				DOUBLE factor = (DOUBLE)(ptTemp.x - ptOrigin.x) / totalSteps;
 				COLORREF color = interpolateColor(startColor, endColor, factor);
 				pDC->SetPixelV(ptTemp.x, ptTemp.y, color);
 				if (d < 0) {
@@ -252,7 +252,7 @@ void CStraightLineView::BresenhamLine(CDC *pDC) {
 				ptEnd = ptTemp;
 			}
 			for (ptTemp = ptOrigin; ptTemp.y >= ptEnd.y; ptTemp.y--) {
-				double factor = (double)(ptOrigin.y - ptTemp.y) / totalSteps;
+				DOUBLE factor = (DOUBLE)(ptOrigin.y - ptTemp.y) / totalSteps;
 				COLORREF color = interpolateColor(startColor, endColor, factor);
 				pDC->SetPixelV(ptTemp.x, ptTemp.y, color);
 				if (d < 0) {
