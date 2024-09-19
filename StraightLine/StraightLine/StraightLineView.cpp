@@ -92,7 +92,8 @@ void CStraightLineView::OnDraw(CDC *pDC) {
 	memDC.TextOutW(10, m_rect.Height() / 2, _T("y"));
 
 	// 调用Bresenham算法绘制直线
-	BresenhamLine(&memDC);
+	// BresenhamLine(&memDC);
+	WuLine(&memDC);
 
 	// 设置显示设备上下文的映射模式和视口
 	pDC->SetMapMode(MM_ANISOTROPIC);
@@ -155,7 +156,7 @@ void CStraightLineView::BresenhamLine(CDC *pDC) {
 	int totalSteps = max(abs(dx), abs(dy));
 
 	// 定义颜色插值函数
-	auto interpolateColor = [](COLORREF start, COLORREF end, DOUBLE factor) -> COLORREF {
+	auto interpolateColor = [](COLORREF start, COLORREF end, double factor) -> COLORREF {
 		BYTE r = static_cast<BYTE>(GetRValue(start) + factor * (GetRValue(end) - GetRValue(start)));
 		BYTE g = static_cast<BYTE>(GetGValue(start) + factor * (GetGValue(end) - GetGValue(start)));
 		BYTE b = static_cast<BYTE>(GetBValue(start) + factor * (GetBValue(end) - GetBValue(start)));
@@ -169,10 +170,130 @@ void CStraightLineView::BresenhamLine(CDC *pDC) {
 			ptOrigin = ptEnd;
 			ptEnd = ptTemp;
 		}
+		for (int y = ptOrigin.y; y <= ptEnd.y; y++) {
+			double factor = (double)(y - ptOrigin.y) / totalSteps;
+			COLORREF color = interpolateColor(startColor, endColor, factor);
+			pDC->SetPixelV(ptOrigin.x, y, color);
+		}
+	}
+	else {
+		// 计算斜率
+		DOUBLE k = (DOUBLE)dy / dx;
+		DOUBLE d;
+
+		// 处理斜率在[0, 1]之间的情况
+		if (k >= 0 && k <= 1) {
+			d = 0.5 - k;
+			if (ptOrigin.x > ptEnd.x) {
+				ptTemp = ptOrigin;
+				ptOrigin = ptEnd;
+				ptEnd = ptTemp;
+			}
+			for (ptTemp = ptOrigin; ptTemp.x <= ptEnd.x; ptTemp.x++) {
+				double factor = (double)(ptTemp.x - ptOrigin.x) / totalSteps;
+				COLORREF color = interpolateColor(startColor, endColor, factor);
+				pDC->SetPixelV(ptTemp.x, ptTemp.y, color);
+				if (d < 0) {
+					d += 1 - k;
+					ptTemp.y++;
+				}
+				else {
+					d -= k;
+				}
+			}
+		}
+		// 处理斜率大于1的情况
+		else if (k > 1) {
+			d = 0.5 - 1 / k;
+			if (ptOrigin.y > ptEnd.y) {
+				ptTemp = ptOrigin;
+				ptOrigin = ptEnd;
+				ptEnd = ptTemp;
+			}
+			for (ptTemp = ptOrigin; ptTemp.y <= ptEnd.y; ptTemp.y++) {
+				double factor = (double)(ptTemp.y - ptOrigin.y) / totalSteps;
+				COLORREF color = interpolateColor(startColor, endColor, factor);
+				pDC->SetPixelV(ptTemp.x, ptTemp.y, color);
+				if (d < 0) {
+					d += 1 - 1 / k;
+					ptTemp.x++;
+				}
+				else {
+					d -= 1 / k;
+				}
+			}
+		}
+		// 处理斜率在[-1, 0]之间的情况
+		else if (k < 0 && k >= -1) {
+			d = 0.5 + k;
+			if (ptOrigin.x > ptEnd.x) {
+				ptTemp = ptOrigin;
+				ptOrigin = ptEnd;
+				ptEnd = ptTemp;
+			}
+			for (ptTemp = ptOrigin; ptTemp.x <= ptEnd.x; ptTemp.x++) {
+				double factor = (double)(ptTemp.x - ptOrigin.x) / totalSteps;
+				COLORREF color = interpolateColor(startColor, endColor, factor);
+				pDC->SetPixelV(ptTemp.x, ptTemp.y, color);
+				if (d < 0) {
+					d += 1 + k;
+					ptTemp.y--;
+				}
+				else {
+					d += k;
+				}
+			}
+		}
+		// 处理斜率小于-1的情况
+		else {
+			d = 0.5 + 1 / k;
+			if (ptOrigin.y < ptEnd.y) {
+				ptTemp = ptOrigin;
+				ptOrigin = ptEnd;
+				ptEnd = ptTemp;
+			}
+			for (ptTemp = ptOrigin; ptTemp.y >= ptEnd.y; ptTemp.y--) {
+				double factor = (double)(ptOrigin.y - ptTemp.y) / totalSteps;
+				COLORREF color = interpolateColor(startColor, endColor, factor);
+				pDC->SetPixelV(ptTemp.x, ptTemp.y, color);
+				if (d < 0) {
+					d += 1 + 1 / k;
+					ptTemp.x++;
+				}
+				else {
+					d += 1 / k;
+				}
+			}
+		}
+	}
+}
+
+void CStraightLineView::WuLine(CDC *pDC) {
+	// 定义起始颜色和结束颜色
+	COLORREF startColor = RGB(0, 82, 217);
+	COLORREF endColor = RGB(236, 189, 101);
+
+	// 获取起点和终点坐标
+	CPoint ptOrigin = m_ptOrigin, ptEnd = m_ptEnd, ptTemp;
+	LONG dx = ptEnd.x - ptOrigin.x, dy = ptEnd.y - ptOrigin.y;
+	int totalSteps = max(abs(dx), abs(dy));
+
+	// 定义颜色插值函数
+	// auto interpolateColor = [](COLORREF start, COLORREF end, DOUBLE factor) -> COLORREF {
+	// 	BYTE r = static_cast<BYTE>(GetRValue(start) + factor * (GetRValue(end) - GetRValue(start)));
+	// 	BYTE g = static_cast<BYTE>(GetGValue(start) + factor * (GetGValue(end) - GetGValue(start)));
+	// 	BYTE b = static_cast<BYTE>(GetBValue(start) + factor * (GetBValue(end) - GetBValue(start)));
+	// 	return RGB(r, g, b);
+	// };
+
+	// 处理垂直线的情况
+	if (ptOrigin.x == ptEnd.x) {
+		if (ptOrigin.y > ptEnd.y) {
+			ptTemp = ptOrigin;
+			ptOrigin = ptEnd;
+			ptEnd = ptTemp;
+		}
 		for (int y = ptOrigin.y; y < ptEnd.y; y++) {
-			// DOUBLE factor = (DOUBLE)(y - ptOrigin.y) / totalSteps;
-			// COLORREF color = interpolateColor(startColor, endColor, factor);
-			// pDC->SetPixelV(ptOrigin.x, y, color);
 			pDC->SetPixelV(ptOrigin.x, y, RGB(0, 0, 0));
 		}
 	}
@@ -189,20 +310,10 @@ void CStraightLineView::BresenhamLine(CDC *pDC) {
 				ptOrigin = ptEnd;
 				ptEnd = ptTemp;
 			}
-			// d = 0.5 - k;
 			for (ptTemp = ptOrigin, e = k; ptTemp.x < ptEnd.x; ptTemp.x++) {
-				// DOUBLE factor = (DOUBLE)(ptTemp.x - ptOrigin.x) / totalSteps;
-				// COLORREF color = interpolateColor(startColor, endColor, factor);
 				pDC->SetPixelV(ptTemp.x, ptTemp.y, RGB(e * 255, e * 255, e * 255));
 				pDC->SetPixelV(ptTemp.x, ptTemp.y + 1, RGB((1.0 - e) * 255, (1.0 - e) * 255, (1.0 - e) * 255));
 				e += k;
-				// if (d < 0) {
-				// 	d += 1 - k;
-				// 	ptTemp.y++;
-				// }
-				// else {
-				// 	d -= k;
-				// }
 				if (e >= 1.0) {
 					ptTemp.y++;
 					e--;
@@ -218,19 +329,9 @@ void CStraightLineView::BresenhamLine(CDC *pDC) {
 			}
 			// d = 0.5 - 1 / k;
 			for (ptTemp = ptOrigin, e = 1 / k; ptTemp.y < ptEnd.y; ptTemp.y++) {
-				// DOUBLE factor = (DOUBLE)(ptOrigin.y - ptTemp.y) / totalSteps;
-				// COLORREF color = interpolateColor(startColor, endColor, factor);
-				// pDC->SetPixelV(ptTemp.x, ptTemp.y, color);
 				pDC->SetPixelV(ptTemp.x, ptTemp.y, RGB(e * 255, e * 255, e * 255));
 				pDC->SetPixelV(ptTemp.x + 1, ptTemp.y, RGB((1.0 - e) * 255, (1.0 - e) * 255, (1.0 - e) * 255));
 				e += 1 / k;
-				// if (d < 0) {
-				// 	d += 1 - 1 / k;
-				// 	ptTemp.x++;
-				// }
-				// else {
-				// 	d -= 1 / k;
-				// }
 				if (e >= 1.0) {
 					ptTemp.x++;
 					e--;
@@ -244,21 +345,10 @@ void CStraightLineView::BresenhamLine(CDC *pDC) {
 				ptOrigin = ptEnd;
 				ptEnd = ptTemp;
 			}
-			// d = 0.5 + k;
 			for (ptTemp = ptOrigin, e = -k; ptTemp.x < ptEnd.x; ptTemp.x++) {
-				// DOUBLE factor = (DOUBLE)(ptTemp.x - ptOrigin.x) / totalSteps;
-				// COLORREF color = interpolateColor(startColor, endColor, factor);
-				// pDC->SetPixelV(ptTemp.x, ptTemp.y, color);
 				pDC->SetPixelV(ptTemp.x, ptTemp.y, RGB(e * 255, e * 255, e * 255));
 				pDC->SetPixelV(ptTemp.x, ptTemp.y - 1, RGB((1 - e) * 255, (1 - e) * 255, (1 - e) * 255));
 				e -= k;
-				// if (d < 0) {
-				// 	d += 1 + k;
-				// 	ptTemp.y--;
-				// }
-				// else {
-				// 	d += k;
-				// }
 				if (e >= 1.0) {
 					ptTemp.y--;
 					e--;
@@ -272,21 +362,10 @@ void CStraightLineView::BresenhamLine(CDC *pDC) {
 				ptOrigin = ptEnd;
 				ptEnd = ptTemp;
 			}
-			// d = 0.5 + 1 / k;
 			for (ptTemp = ptOrigin, e = -1 / k; ptTemp.y > ptEnd.y; ptTemp.y--) {
-				// DOUBLE factor = (DOUBLE)(ptOrigin.y - ptTemp.y) / totalSteps;
-				// COLORREF color = interpolateColor(startColor, endColor, factor);
-				// pDC->SetPixelV(ptTemp.x, ptTemp.y, color);
 				pDC->SetPixelV(ptTemp.x, ptTemp.y, RGB(e * 255, e * 255, e * 255));
 				pDC->SetPixelV(ptTemp.x + 1, ptTemp.y, RGB((1 - e) * 255, (1 - e) * 255, (1 - e) * 255));
 				e -= 1 / k;
-				// if (d < 0) {
-				// 	d += 1 + 1 / k;
-				// 	ptTemp.x++;
-				// }
-				// else {
-				// 	d += 1 / k;
-				// }
 				if (e >= 1.0) {
 					ptTemp.x++;
 					e--;
