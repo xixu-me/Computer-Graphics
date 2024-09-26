@@ -68,9 +68,8 @@ void CFill::CreateEdge() {
 			pEdge->ps = P[i];
 			pEdge->pe = P[j];
 			pEdge->pNext = NULL;
-			while (pCurrentB->ScanLine != P[i].y) {
+			while (pCurrentB->ScanLine != P[i].y)
 				pCurrentB = pCurrentB->pNext;
-			}
 		}
 		if (P[j].y < P[i].y) {
 			pEdge = new CAET;
@@ -80,9 +79,8 @@ void CFill::CreateEdge() {
 			pEdge->ps = P[i];
 			pEdge->pe = P[j];
 			pEdge->pNext = NULL;
-			while (pCurrentB->ScanLine != P[j].y) {
+			while (pCurrentB->ScanLine != P[j].y)
 				pCurrentB = pCurrentB->pNext;
-			}
 		}
 		if (P[i].y != P[j].y) {
 			pCurrentE = pCurrentB->pET;
@@ -91,9 +89,8 @@ void CFill::CreateEdge() {
 				pCurrentB->pET = pCurrentE;
 			}
 			else {
-				while (pCurrentE->pNext != NULL) {
+				while (pCurrentE->pNext != NULL)
 					pCurrentE = pCurrentE->pNext;
-				}
 				pCurrentE->pNext = pEdge;
 			}
 		}
@@ -161,9 +158,8 @@ void CFill::Gouraud(CDC *pDC) {
 				bInFlag = FALSE;
 			}
 		}
-		for (pT1 = pHeadE; pT1 != NULL; pT1 = pT1->pNext) {
+		for (pT1 = pHeadE; pT1 != NULL; pT1 = pT1->pNext)
 			pT1->x = pT1->x + pT1->k;
-		}
 	}
 }
 
