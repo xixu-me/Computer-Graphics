@@ -124,15 +124,13 @@ void CScanlineRenderingView::DrawGraph() {
 void CScanlineRenderingView::DrawPolygon(CDC *pDC) {
 	CLine *line = new CLine;
 	CP2 t;
-	for (int i = 0; i < 3; i++) {
+	for (int i = 0; i < 3; i++)
 		if (i == 0) {
 			line->MoveTo(pDC, P[i]);
 			t = P[i];
 		}
-		else {
+		else
 			line->LineTo(pDC, P[i]);
-		}
-	}
 	line->LineTo(pDC, t);
 	delete line;
 }
