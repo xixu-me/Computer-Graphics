@@ -104,10 +104,10 @@ CNationalFlagDoc *CNationalFlagView::GetDocument() const // non-debug version is
 void CNationalFlagView::DrawFlag(CDC *pDC, CPoint center, int height) {
 	int width = ROUND(height * 1.5);
 	CPen NewPen, *pOldPen;
-	NewPen.CreatePen(PS_SOLID, 1, RGB(255, 0, 0));
+	NewPen.CreatePen(PS_SOLID, 1, RGB(238, 28, 37));
 	pOldPen = pDC->SelectObject(&NewPen);
 	CBrush NewBrush, *pOldBrush;
-	NewBrush.CreateSolidBrush(RGB(255, 0, 0));
+	NewBrush.CreateSolidBrush(RGB(238, 28, 37));
 	pOldBrush = pDC->SelectObject(&NewBrush);
 	pDC->Rectangle(ROUND(center.x - width / 2), ROUND(center.y - height / 2), ROUND(center.x + width / 2), ROUND(center.y + height / 2));
 	pDC->SelectObject(pOldBrush);
@@ -124,10 +124,10 @@ void CNationalFlagView::DrawFlag(CDC *pDC, CPoint center, int height) {
 
 void CNationalFlagView::DrawStar(CDC *pDC, CPoint center, double angle, int radius) {
 	CPen NewPen, *pOldPen;
-	NewPen.CreatePen(PS_SOLID, 1, RGB(255, 215, 0));
+	NewPen.CreatePen(PS_SOLID, 1, RGB(255, 255, 0));
 	pOldPen = pDC->SelectObject(&NewPen);
 	CBrush NewBrush, *pOldBrush;
-	NewBrush.CreateSolidBrush(RGB(255, 215, 0));
+	NewBrush.CreateSolidBrush(RGB(255, 255, 0));
 	pOldBrush = pDC->SelectObject(&NewBrush);
 	CPoint points[10];
 	for (int i = 0; i < 10; i++) {
