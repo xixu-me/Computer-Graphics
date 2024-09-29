@@ -62,7 +62,7 @@ void CNationalFlagView::OnDraw(CDC *pDC) {
 	pDC->SetViewportExt(rect.Width(), -rect.Height());
 	pDC->SetViewportOrg(ROUND(rect.Width() / 2), ROUND(rect.Height() / 2));
 	rect.OffsetRect(ROUND(-rect.Width() / 2), ROUND(-rect.Height() / 2));
-	if (rect.Width() > static_cast<int>(ROUND(rect.Height() * 1.5)))
+	if (rect.Width() > (ROUND(rect.Height() * 1.5)))
 		DrawFlag(pDC, rect.CenterPoint(), rect.Height());
 	else
 		DrawFlag(pDC, rect.CenterPoint(), ROUND(rect.Width() / 1.5));
