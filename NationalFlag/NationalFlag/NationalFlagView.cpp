@@ -101,6 +101,102 @@ CNationalFlagDoc *CNationalFlagView::GetDocument() const // non-debug version is
 }
 #endif //_DEBUG
 
+void CNationalFlagView::DrawWuLine(CDC *pDC, CPoint begin, CPoint end) {
+	COLORREF foreColor = RGB(255, 255, 0);
+	COLORREF backColor = RGB(238, 28, 37);
+	CPoint temp;
+	LONG dx = end.x - begin.x, dy = end.y - begin.y;
+	int totalSteps = max(abs(dx), abs(dy));
+	auto downPixelColor = [&](COLORREF foreColor, double e) -> COLORREF {
+		BYTE r = static_cast<BYTE>((GetRValue(backColor) - GetRValue(foreColor)) * e + GetRValue(foreColor));
+		BYTE g = static_cast<BYTE>((GetGValue(backColor) - GetGValue(foreColor)) * e + GetGValue(foreColor));
+		BYTE b = static_cast<BYTE>((GetBValue(backColor) - GetBValue(foreColor)) * e + GetBValue(foreColor));
+		return RGB(r, g, b);
+	};
+	auto upPixelColor = [&](COLORREF foreColor, double e) -> COLORREF {
+		BYTE r = static_cast<BYTE>((GetRValue(backColor) - GetRValue(foreColor)) * (1 - e) + GetRValue(foreColor));
+		BYTE g = static_cast<BYTE>((GetGValue(backColor) - GetGValue(foreColor)) * (1 - e) + GetGValue(foreColor));
+		BYTE b = static_cast<BYTE>((GetBValue(backColor) - GetBValue(foreColor)) * (1 - e) + GetBValue(foreColor));
+		return RGB(r, g, b);
+	};
+	if (begin.x == end.x) {
+		if (begin.y > end.y) {
+			temp = begin;
+			begin = end;
+			end = temp;
+		}
+		for (int y = begin.y; y < end.y; y++)
+			pDC->SetPixelV(begin.x, y, foreColor);
+	}
+	else {
+		double k = (double)dy / dx, e;
+		if (k >= 0.0 && k <= 1.0) {
+			if (begin.x > end.x) {
+				temp = begin;
+				begin = end;
+				end = temp;
+			}
+			for (temp = begin, e = k; temp.x < end.x; temp.x++) {
+				pDC->SetPixelV(temp.x, temp.y, downPixelColor(foreColor, e));
+				pDC->SetPixelV(temp.x, temp.y + 1, upPixelColor(foreColor, e));
+				e += k;
+				if (e >= 1.0) {
+					temp.y++;
+					e--;
+				}
+			}
+		}
+		else if (k > 1.0) {
+			if (begin.y > end.y) {
+				temp = begin;
+				begin = end;
+				end = temp;
+			}
+			for (temp = begin, e = 1 / k; temp.y < end.y; temp.y++) {
+				pDC->SetPixelV(temp.x, temp.y, downPixelColor(foreColor, e));
+				pDC->SetPixelV(temp.x + 1, temp.y, upPixelColor(foreColor, e));
+				e += 1 / k;
+				if (e >= 1.0) {
+					temp.x++;
+					e--;
+				}
+			}
+		}
+		else if (k < 0.0 && k >= -1.0) {
+			if (begin.x > end.x) {
+				temp = begin;
+				begin = end;
+				end = temp;
+			}
+			for (temp = begin, e = -k; temp.x < end.x; temp.x++) {
+				pDC->SetPixelV(temp.x, temp.y, downPixelColor(foreColor, e));
+				pDC->SetPixelV(temp.x, temp.y - 1, upPixelColor(foreColor, e));
+				e -= k;
+				if (e >= 1.0) {
+					temp.y--;
+					e--;
+				}
+			}
+		}
+		else {
+			if (begin.y < end.y) {
+				temp = begin;
+				begin = end;
+				end = temp;
+			}
+			for (temp = begin, e = -1 / k; temp.y > end.y; temp.y--) {
+				pDC->SetPixelV(temp.x, temp.y, downPixelColor(foreColor, e));
+				pDC->SetPixelV(temp.x + 1, temp.y, upPixelColor(foreColor, e));
+				e -= 1 / k;
+				if (e >= 1.0) {
+					temp.x++;
+					e--;
+				}
+			}
+		}
+	}
+}
+
 void CNationalFlagView::DrawFlag(CDC *pDC, CPoint center, int height) {
 	int width = ROUND(height * 1.5);
 	CPen NewPen, *pOldPen;
@@ -123,12 +219,6 @@ void CNationalFlagView::DrawFlag(CDC *pDC, CPoint center, int height) {
 }
 
 void CNationalFlagView::DrawStar(CDC *pDC, CPoint center, double angle, int radius) {
-	CPen NewPen, *pOldPen;
-	NewPen.CreatePen(PS_SOLID, 1, RGB(255, 255, 0));
-	pOldPen = pDC->SelectObject(&NewPen);
-	CBrush NewBrush, *pOldBrush;
-	NewBrush.CreateSolidBrush(RGB(255, 255, 0));
-	pOldBrush = pDC->SelectObject(&NewBrush);
 	CPoint points[10];
 	for (int i = 0; i < 10; i++) {
 		double theta = angle + i * 36.0 * M_PI / 180.0 - M_PI / 2;
@@ -136,6 +226,14 @@ void CNationalFlagView::DrawStar(CDC *pDC, CPoint center, double angle, int radi
 		points[i].x = ROUND(center.x + r * cos(theta));
 		points[i].y = ROUND(center.y - r * sin(theta));
 	}
+	// for (int i = 0; i < 10; i++)
+	// 	DrawWuLine(pDC, points[i], points[(i + 1) % 10]);
+	CPen NewPen, *pOldPen;
+	NewPen.CreatePen(PS_SOLID, 1, RGB(255, 255, 0));
+	pOldPen = pDC->SelectObject(&NewPen);
+	CBrush NewBrush, *pOldBrush;
+	NewBrush.CreateSolidBrush(RGB(255, 255, 0));
+	pOldBrush = pDC->SelectObject(&NewBrush);
 	pDC->BeginPath();
 	pDC->MoveTo(points[0]);
 	for (int i = 1; i < 10; i++)
