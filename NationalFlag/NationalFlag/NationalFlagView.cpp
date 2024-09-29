@@ -118,8 +118,8 @@ void CNationalFlagView::DrawFlag(CDC *pDC, CPoint center, int height) {
 	DrawStar(pDC, CPoint(-10 * cell, 5 * cell), 0, 3 * cell);
 	DrawStar(pDC, CPoint(-5 * cell, 8 * cell), -(atan(3.0 / 5) + M_PI / 10), cell);
 	DrawStar(pDC, CPoint(-3 * cell, 6 * cell), -(atan(1.0 / 7) + M_PI / 10), cell);
-	DrawStar(pDC, CPoint(-3 * cell, 3 * cell), 0, cell);
-	DrawStar(pDC, CPoint(-5 * cell, cell), M_PI / 2, cell);
+	DrawStar(pDC, CPoint(-3 * cell, 3 * cell), atan(2.0 / 7) - M_PI / 10, cell);
+	DrawStar(pDC, CPoint(-5 * cell, cell), atan(4.0 / 5) - M_PI / 10, cell);
 }
 
 void CNationalFlagView::DrawStar(CDC *pDC, CPoint center, double angle, int radius) {
