@@ -318,7 +318,6 @@ void CStraightLineView::WuLine(CDC *pDC) {
 	else {
 		// 计算斜率
 		DOUBLE k = (DOUBLE)dy / dx;
-		// DOUBLE d;
 		DOUBLE e;
 
 		// 处理斜率在[0, 1]之间的情况
@@ -347,7 +346,6 @@ void CStraightLineView::WuLine(CDC *pDC) {
 				ptOrigin = ptEnd;
 				ptEnd = ptTemp;
 			}
-			// d = 0.5 - 1 / k;
 			for (ptTemp = ptOrigin, e = 1 / k; ptTemp.y < ptEnd.y; ptTemp.y++) {
 				DOUBLE factor = (DOUBLE)(ptTemp.y - ptOrigin.y) / totalSteps;
 				COLORREF foreColor = interpolateColor(startColor, endColor, factor);
