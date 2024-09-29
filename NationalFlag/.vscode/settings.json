@@ -1,0 +1,6 @@
+{
+    "git.openRepositoryInParentFolders": "never",
+    "files.associations": {
+        "cmath": "cpp"
+    }
+}
