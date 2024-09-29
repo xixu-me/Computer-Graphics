@@ -34,6 +34,7 @@ public:
 #endif
 
 protected:
+	void DrawWuLine(CDC *pDC, CPoint begin, CPoint end);
 	void DrawFlag(CDC *pDC, CPoint center, int height);
 	void DrawStar(CDC *pDC, CPoint center, double angle, int radius);
 
