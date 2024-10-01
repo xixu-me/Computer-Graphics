@@ -12,7 +12,6 @@
 
 #include "ScanlineRenderingDoc.h"
 #include "ScanlineRenderingView.h"
-#include <math.h>
 #define Round(x) (int)(x + 0.5)
 
 #ifdef _DEBUG
