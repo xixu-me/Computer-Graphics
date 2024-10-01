@@ -20,7 +20,4 @@ protected:
 	CPi2 *P;
 	CAET *pHeadE, *pCurrentE, *pEdge;
 	CBucket *pHeadB, *pCurrentB;
-
-public:
-	CRGB LinearDifferential(double y0, double y, double y1, CRGB c0, CRGB c1);
 };
