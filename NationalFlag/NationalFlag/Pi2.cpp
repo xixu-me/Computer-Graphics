@@ -5,7 +5,6 @@
 CPi2::CPi2() {
 	this->x = 0.0;
 	this->y = 0;
-	this->c = CRGB(0.0, 1.0, 1.0);
 }
 
 CPi2::~CPi2() {
