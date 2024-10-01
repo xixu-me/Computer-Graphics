@@ -3,6 +3,7 @@
 //
 
 #pragma once
+
 #include "Fill.h"
 
 class CNationalFlagView : public CView {
@@ -22,7 +23,6 @@ public:
 	virtual BOOL PreCreateWindow(CREATESTRUCT &cs);
 
 protected:
-	CPi2 P[10];
 	virtual BOOL OnPreparePrinting(CPrintInfo *pInfo);
 	virtual void OnBeginPrinting(CDC *pDC, CPrintInfo *pInfo);
 	virtual void OnEndPrinting(CDC *pDC, CPrintInfo *pInfo);
@@ -36,7 +36,6 @@ public:
 #endif
 
 protected:
-	void DrawWuLine(CDC *pDC, CPoint begin, CPoint end);
 	void DrawFlag(CDC *pDC, CPoint center, int height);
 	void DrawStar(CDC *pDC, CPoint center, double angle, int radius);
 
