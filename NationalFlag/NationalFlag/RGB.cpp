@@ -1,4 +1,5 @@
 #include "pch.h"
+
 #include "RGB.h"
 
 CRGB::CRGB() {
