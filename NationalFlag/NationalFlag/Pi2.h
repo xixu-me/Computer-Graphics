@@ -1,7 +1,5 @@
 #pragma once
 
-#include "RGB.h"
-
 class CPi2 {
 public:
 	CPi2();
