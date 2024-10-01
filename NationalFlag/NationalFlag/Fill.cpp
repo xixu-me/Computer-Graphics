@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "Fill.h"
-#define Round(x) (int)(x + 0.5)
+#define ROUND(x) x >= 0 ? (int)(x + 0.5) : (int)(x - 0.5)
 
 CFill::CFill() {
 	PNum = 0;
@@ -152,7 +152,7 @@ void CFill::Gouraud(CDC *pDC) {
 				ce = LinearDifferential(pT1->ps.y, pCurrentB->ScanLine, pT1->pe.y, pT1->ps.c, pT1->pe.c);
 				for (double x = xb; x < xe; x++) {
 					c = LinearDifferential(xb, x, xe, cb, ce);
-					pDC->SetPixelV(Round(x), pCurrentB->ScanLine, RGB(c.red * 255, c.green * 255, c.blue * 255));
+					pDC->SetPixelV(ROUND(x), pCurrentB->ScanLine, RGB(c.red * 255, c.green * 255, c.blue * 255));
 				}
 				bInFlag = FALSE;
 			}
