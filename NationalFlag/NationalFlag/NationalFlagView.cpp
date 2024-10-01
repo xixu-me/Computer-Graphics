@@ -225,25 +225,17 @@ void CNationalFlagView::DrawStar(CDC *pDC, CPoint center, double angle, int radi
 		points[i].x = ROUND(center.x + r * cos(theta));
 		points[i].y = ROUND(center.y - r * sin(theta));
 	}
-	// for (int i = 0; i < 10; i++)
-	// 	DrawWuLine(pDC, points[i], points[(i + 1) % 10]);
-	CPen NewPen, *pOldPen;
-	NewPen.CreatePen(PS_SOLID, 1, RGB(255, 255, 0));
-	pOldPen = pDC->SelectObject(&NewPen);
-	CBrush NewBrush, *pOldBrush;
-	NewBrush.CreateSolidBrush(RGB(255, 255, 0));
-	pOldBrush = pDC->SelectObject(&NewBrush);
-	pDC->BeginPath();
-	pDC->MoveTo(points[0]);
-	for (int i = 1; i < 10; i++)
-		pDC->LineTo(points[i]);
-	pDC->LineTo(points[0]);
-	pDC->EndPath();
-	pDC->FillPath();
-	pDC->SelectObject(pOldBrush);
-	NewBrush.DeleteObject();
-	pDC->SelectObject(pOldPen);
-	NewPen.DeleteObject();
+	for (int i = 0; i < 10; i++) {
+		P[i].x = points[i].x;
+		P[i].y = points[i].y;
+		P[i].c = CRGB(1, 1, 0);
+	}
+	CFill *pFill = new CFill();
+	pFill->SetPoint(P, 10);
+	pFill->CreateBucket();
+	pFill->CreateEdge();
+	pFill->Gouraud(pDC);
+	delete pFill;
 }
 
 // CNationalFlagView message handlers
