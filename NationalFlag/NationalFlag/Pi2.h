@@ -9,5 +9,4 @@ public:
 	CPi2(double, int);
 	double x;
 	int y;
-	CRGB c;
 };
