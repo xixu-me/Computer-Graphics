@@ -142,19 +142,15 @@ void CFill::Gouraud(CDC *pDC) {
 		}
 		BOOL bInFlag = FALSE;
 		double xb, xe;
-		CRGB cb, ce, c;
 		for (pT1 = pHeadE; pT1 != NULL; pT1 = pT1->pNext) {
 			if (FALSE == bInFlag) {
 				xb = pT1->x;
-				cb = LinearDifferential(pT1->ps.y, pCurrentB->ScanLine, pT1->pe.y, pT1->ps.c, pT1->pe.c);
 				bInFlag = TRUE;
 			}
 			else {
 				xe = pT1->x;
-				ce = LinearDifferential(pT1->ps.y, pCurrentB->ScanLine, pT1->pe.y, pT1->ps.c, pT1->pe.c);
 				for (double x = xb; x < xe; x++) {
-					c = LinearDifferential(xb, x, xe, cb, ce);
-					pDC->SetPixelV(ROUND(x), pCurrentB->ScanLine, RGB(c.red * 255, c.green * 255, c.blue * 255));
+					pDC->SetPixelV(ROUND(x), pCurrentB->ScanLine, RGB(255, 255, 0));
 				}
 				bInFlag = FALSE;
 			}
@@ -231,12 +227,4 @@ void CFill::DeleteAETChain(CAET *pAET) {
 		delete pAET;
 		pAET = pAETTemp;
 	}
-}
-
-CRGB CFill::LinearDifferential(double y0, double y, double y1, CRGB c0, CRGB c1) {
-	CRGB c;
-	double t;
-	t = (y - y0) / (y1 - y0);
-	c = (1 - t) * c0 + t * c1;
-	return c;
 }
