@@ -183,26 +183,38 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AET.h" />
+    <ClInclude Include="Bucket.h" />
+    <ClInclude Include="Fill.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="NationalFlag.h" />
     <ClInclude Include="NationalFlagDoc.h" />
     <ClInclude Include="NationalFlagView.h" />
+    <ClInclude Include="P2.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="Pi2.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="RGB.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AET.cpp" />
+    <ClCompile Include="Bucket.cpp" />
+    <ClCompile Include="Fill.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="NationalFlag.cpp" />
     <ClCompile Include="NationalFlagDoc.cpp" />
     <ClCompile Include="NationalFlagView.cpp" />
+    <ClCompile Include="P2.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Pi2.cpp" />
+    <ClCompile Include="RGB.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="NationalFlag.rc" />
