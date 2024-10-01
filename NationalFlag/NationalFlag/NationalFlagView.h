@@ -3,6 +3,7 @@
 //
 
 #pragma once
+#include "Fill.h"
 
 class CNationalFlagView : public CView {
 protected: // create from serialization only
@@ -21,6 +22,7 @@ public:
 	virtual BOOL PreCreateWindow(CREATESTRUCT &cs);
 
 protected:
+	CPi2 P[10];
 	virtual BOOL OnPreparePrinting(CPrintInfo *pInfo);
 	virtual void OnBeginPrinting(CDC *pDC, CPrintInfo *pInfo);
 	virtual void OnEndPrinting(CDC *pDC, CPrintInfo *pInfo);
