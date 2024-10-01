@@ -1,5 +1,4 @@
 #include "pch.h"
-#include <math.h>
 #include "Line.h"
 #define Round(x) (int)(x + 0.5)
 
