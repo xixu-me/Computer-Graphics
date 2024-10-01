@@ -13,9 +13,6 @@
 #include "NationalFlagDoc.h"
 #include "NationalFlagView.h"
 
-#define M_PI 3.14159265358979323846
-#define ROUND(x) x >= 0 ? (int)(x + 0.5) : (int)(x - 0.5)
-
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -48,24 +45,6 @@ BOOL CNationalFlagView::PreCreateWindow(CREATESTRUCT &cs) {
 }
 
 // CNationalFlagView drawing
-
-void CNationalFlagView::OnDraw(CDC *pDC) {
-	CNationalFlagDoc *pDoc = GetDocument();
-	ASSERT_VALID(pDoc);
-	if (!pDoc)
-		return;
-
-	CRect rect;
-	GetClientRect(&rect);
-	pDC->SetMapMode(MM_ANISOTROPIC);
-	pDC->SetWindowExt(rect.Width(), rect.Height());
-	pDC->SetViewportExt(rect.Width(), -rect.Height());
-	pDC->SetViewportOrg(ROUND(rect.Width() / 2), ROUND(rect.Height() / 2));
-	if (rect.Width() > (ROUND(rect.Height() * 1.5)))
-		DrawFlag(pDC, CPoint(0, 0), rect.Height());
-	else
-		DrawFlag(pDC, CPoint(0, 0), ROUND(rect.Width() / 1.5));
-}
 
 // CNationalFlagView printing
 
@@ -100,6 +79,27 @@ CNationalFlagDoc *CNationalFlagView::GetDocument() const // non-debug version is
 }
 #endif //_DEBUG
 
+#define M_PI 3.14159265358979323846
+#define ROUND(x) x >= 0 ? (int)(x + 0.5) : (int)(x - 0.5)
+
+void CNationalFlagView::OnDraw(CDC *pDC) {
+	CNationalFlagDoc *pDoc = GetDocument();
+	ASSERT_VALID(pDoc);
+	if (!pDoc)
+		return;
+
+	CRect rect;
+	GetClientRect(&rect);
+	pDC->SetMapMode(MM_ANISOTROPIC);
+	pDC->SetWindowExt(rect.Width(), rect.Height());
+	pDC->SetViewportExt(rect.Width(), -rect.Height());
+	pDC->SetViewportOrg(ROUND(rect.Width() / 2), ROUND(rect.Height() / 2));
+	if (rect.Width() > (ROUND(rect.Height() * 1.5)))
+		DrawFlag(pDC, CPoint(0, 0), rect.Height());
+	else
+		DrawFlag(pDC, CPoint(0, 0), ROUND(rect.Width() / 1.5));
+}
+
 void CNationalFlagView::DrawFlag(CDC *pDC, CPoint center, int height) {
 	int width = ROUND(height * 1.5);
 	CPen NewPen, *pOldPen;
@@ -128,7 +128,6 @@ void CNationalFlagView::DrawStar(CDC *pDC, CPoint center, double angle, int radi
 		double r = (i % 2 == 0) ? radius : radius * 0.382;
 		points[i].x = ROUND(center.x + r * cos(theta));
 		points[i].y = ROUND(center.y - r * sin(theta));
-		points[i].c = CRGB(1, 1, 0);
 	}
 	CFill *pFill = new CFill();
 	pFill->SetPoint(points, 10);
