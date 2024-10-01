@@ -122,15 +122,16 @@ void CNationalFlagView::DrawFlag(CDC *pDC, CPoint center, int height) {
 }
 
 void CNationalFlagView::DrawStar(CDC *pDC, CPoint center, double angle, int radius) {
-	CPi2 points[10];
-	for (int i = 0; i < 10; i++) {
+	const int N = 10;
+	CPi2 points[N];
+	for (int i = 0; i < N; i++) {
 		double theta = angle + i * 36.0 * M_PI / 180.0 - M_PI / 2;
 		double r = (i % 2 == 0) ? radius : radius * 0.382;
 		points[i].x = ROUND(center.x + r * cos(theta));
 		points[i].y = ROUND(center.y - r * sin(theta));
 	}
 	CFill *pFill = new CFill();
-	pFill->SetPoint(points, 10);
+	pFill->SetPoint(points, N);
 	pFill->CreateBucket();
 	pFill->CreateEdge();
 	pFill->Gouraud(pDC);
