@@ -261,23 +261,3 @@ int CClip2DView::ZoomX(int x) {
 int CClip2DView::ZoomY(int y) {
 	return Round((y - nRCenter.y) * nScale + nRCenter.y);
 }
-
-void CClip2DView::OnLButtonDown(UINT nFlags, CPoint point) {
-	// TODO: Add your message handler code here and/or call default
-	if (nScale <= 5)
-		nScale = nScale + 1;
-	else
-		MessageBox(_T("The magnification is too large"));
-	Invalidate(FALSE);
-	CView::OnLButtonDown(nFlags, point);
-}
-
-void CClip2DView::OnRButtonDown(UINT nFlags, CPoint point) {
-	// TODO: Add your message handler code here and/or call default
-	if (nScale >= 2)
-		nScale = nScale - 1;
-	else
-		MessageBox(_T("The magnification is too small"));
-	Invalidate(FALSE);
-	CView::OnRButtonDown(nFlags, point);
-}
