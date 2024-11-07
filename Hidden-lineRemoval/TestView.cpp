@@ -323,7 +323,6 @@ void CTestView::DrawObject(CDC *pDC) // 绘制物体表面
 			p[3].y = (R + r * cos(theta + delta)) * sin(phi);
 			p[3].z = r * sin(theta + delta);
 
-			// ... 保持其余代码不变 ...
 			tran.SetMat(p, 4);
 			tran.RotateX(Alpha);
 			tran.RotateY(Beta);
