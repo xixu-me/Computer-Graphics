@@ -1,0 +1,16 @@
+{
+    "configurations": [
+        {
+            "name": "Visual Studio: Start Debugging",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}\\Debug\\${workspaceFolderBasename}.exe",
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "preLaunchTask": "Visual Studio: Build Solution",
+            "internalConsoleOptions": "neverOpen"
+        }
+    ],
+    "version": "0.2.0"
+}
