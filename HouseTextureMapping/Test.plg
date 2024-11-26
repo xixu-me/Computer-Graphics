@@ -1,0 +1,42 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: Test - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\Users\csq-n\AppData\Local\Temp\RSPABF9.tmp" with contents
+[
+/nologo /o"Debug/Test.bsc" 
+".\Debug\StdAfx.sbr"
+".\Debug\AET.sbr"
+".\Debug\Bucket.sbr"
+".\Debug\Face.sbr"
+".\Debug\Light.sbr"
+".\Debug\Lighting.sbr"
+".\Debug\MainFrm.sbr"
+".\Debug\Material.sbr"
+".\Debug\P2.sbr"
+".\Debug\P3.sbr"
+".\Debug\Pi2.sbr"
+".\Debug\Pi3.sbr"
+".\Debug\RGB.sbr"
+".\Debug\T2.sbr"
+".\Debug\Test.sbr"
+".\Debug\TestDoc.sbr"
+".\Debug\TestView.sbr"
+".\Debug\Transform .sbr"
+".\Debug\Vector.sbr"
+".\Debug\ZBuffer.sbr"]
+Creating command line "bscmake.exe @"C:\Users\csq-n\AppData\Local\Temp\RSPABF9.tmp""
+Creating browse info file...
+<h3>Output Window</h3>
+
+
+
+<h3>Results</h3>
+Test.exe - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>
