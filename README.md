@@ -1,4 +1,4 @@
-## Note
+## About
 
 This repository provides the source code of my implementation for assignments from the course Computer Graphics.
 
